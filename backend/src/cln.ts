@@ -1,6 +1,8 @@
 import fs from "fs";
 import { getFiletype, translateFile } from "./utils/file";
 
+import langs, { Legends } from "./langs";
+
 import { scanf, colors } from "./utils/iostream";
 
 class CommandLine {
@@ -10,7 +12,7 @@ class CommandLine {
   protected commands: Array<string>;
 
   public constructor() {
-    console.log("running on command line");
+    console.log(langs(Legends.COMMAND_LINE));
 
     this.commands = process.argv;
 
@@ -26,8 +28,9 @@ class CommandLine {
 
     if (!command.includes(CMD)) {
       console.log("Arquivo não especificado");
+      langs(Legends.starting).then(e => console.log(e));
 
-      this.askNewFileName();
+      // this.askNewFileName();
     } else {
       // this.filename = command["-file"];
       command.map((i, j) => {
@@ -44,8 +47,7 @@ class CommandLine {
       });
     }
 
-    this.findFile();
-    return null;
+    return this.filename ? this.findFile() : null;
   }
 
   private askNewFileName(): void {

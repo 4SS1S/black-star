@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import langs, { Legends } from "./langs";
 
 import routes from "./routes";
 
@@ -14,7 +15,7 @@ class App {
     this.middlewares();
 
     this.app.listen(PORT, () => {
-      console.log(`running on ${PORT}`);
+      langs(Legends.starting).then(e => console.log(`${e} ${PORT}`));
     });
   }
 
