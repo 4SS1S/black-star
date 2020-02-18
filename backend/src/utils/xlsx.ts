@@ -1,7 +1,9 @@
 import xlsx, { WorkBook, Sheet } from "xlsx";
 
 export default (buffer: Buffer): Array<Object> => {
-  const file: WorkBook = xlsx.read(buffer);
+  const file: WorkBook = xlsx.read(buffer, {
+    cellDates: true
+  });
   const SheetNames: string[] = file.SheetNames;
 
   console.log(SheetNames);

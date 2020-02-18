@@ -1,7 +1,7 @@
 class convert {
   public constructor() {}
 
-  table(table: Object, values: Array<Object>): string {
+  table(table: Array<Object>, values: Array<Object>): string {
     let infodata: string;
 
     const tables = [
@@ -9,6 +9,7 @@ class convert {
       "guia",
       "data_emissao",
       "codigo_beneficiario",
+      "nome_beneficiario",
       "nome_titular_contrato",
       "nome_titular",
       "empresa",
@@ -22,7 +23,6 @@ class convert {
       "quantidade",
       "quantidade_solicitada",
       "valor_copart_caixa",
-      "valor_copart_prestador",
       "codigo_taxa",
       "descricao_taxa",
       "valor_tabela_taxa",
@@ -50,19 +50,23 @@ class convert {
       "competencia_contabil"
     ];
 
-    table.forEach((element, row) => {
+    let init = "INSERT INTO `wm_poa_clinicas` (";
+
+    tables.map((i, j) => {
+      if (j === 0) {
+        init += `\`${i}\``;
+      } else {
+        init += `,\`${i}\``;
+      }
+    });
+
+    init += ") VALUES";
+    infodata += init;
+
+    table.forEach((element: Array<Object>, row: number) => {
       if (row !== 0 || element !== undefined) {
-        let str = "INSERT INTO `poa_clinicas` (";
-
-        tables.map((i, j) => {
-          if (j === 0) {
-            str += `\`${i}\``;
-          } else {
-            str += `,\`${i}\``;
-          }
-        });
-
-        str += ") VALUES (NULL,";
+        let str: String;
+        str += "(NULL,";
 
         tables.map((i, j) => {
           if (j === 0) return;
@@ -76,16 +80,26 @@ class convert {
               if (j !== 1) {
                 str += ",";
               }
-              str += `'${element[i.toUpperCase()]}'`;
+
+              const prev_date = "T03:00:28.000Z";
+              let text: String = element[i.toUpperCase()].toString();
+
+              if (text.includes(prev_date)) {
+                text = text.replace(prev_date, "");
+              }
+
+              if (text.includes("/19")) {
+                const prev_text = text.split("/");
+
+                text = `20${prev_text[2]}-${prev_text[1]}-${prev_text[0]}`;
+              }
+
+              str += `'${text}'`;
             } else {
               if (j !== 1) {
                 str += ",";
               }
-              str += "'0'";
-            }
-
-            if (element[i.toUpperCase()]) {
-              // console.log(element[i.toUpperCase()]);
+              str += "NULL";
             }
           }
         });
@@ -99,7 +113,7 @@ class convert {
         //   row++;
         // }
 
-        str += ");\n";
+        str += "),\n";
 
         infodata += str;
       }
