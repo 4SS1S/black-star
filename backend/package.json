@@ -27,7 +27,7 @@
     "global": "^4.4.0",
     "gluegun": "^4.1.2",
     "read-excel-file": "^4.0.5",
-    "xlsx": "^0.15.5"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "dev": "nodemon src/index.ts",
